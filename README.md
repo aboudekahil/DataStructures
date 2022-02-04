@@ -1,2 +1,3 @@
-# DataStructures
- Learning data structures
+# Data Structures
+
+Learning data structures
