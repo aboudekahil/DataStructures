@@ -1,10 +1,13 @@
+from typing import Any
+
+
 class Node:
     def __init__(self, val, next=None) -> None:
         self.val = val
         self.next = next
 
 
-class LinkedList:
+class CircularLinkedList:
     def __init__(self) -> None:
         self.head = None
         self.tail = None
@@ -18,10 +21,12 @@ class LinkedList:
 
     def addLast(self, val) -> None:
         newLast = Node(val)
+
         if self.isEmpty():
-            self.head = Node(val)
-            self.tail = self.head
+            self.head = newLast
+            self.tail = newLast
         else:
+            newLast.next = self.head
             self.tail.next = newLast
             self.tail = newLast
 
@@ -35,6 +40,7 @@ class LinkedList:
             self.tail = newFirst
         else:
             newFirst.next = self.head
+            self.tail.next = newFirst
             self.head = newFirst
 
         self.size += 1
@@ -61,45 +67,42 @@ class LinkedList:
 
             self.size += 1
 
-    def removeFirst(self):
+    def removeFirst(self) -> Any:
         if self.isEmpty():
-            raise Exception("Can't remove an element from an empty list")
+            raise Exception("List is empty")
 
         rVal = self.head.val
+
+        self.tail.next = self.head.next
         self.head = self.head.next
 
         self.size -= 1
 
-        if self.isEmpty():
-            self.tail = None
-
         return rVal
 
-    def removeLast(self):
+    def removeLast(self) -> Any:
         if self.isEmpty():
-            raise Exception("Can't remove an element from an empty list")
+            raise Exception("List is empty")
+
+        rVal = self.tail.val
 
         current = self.head
+        for _ in range(self.size - 2):
+            current = current.next
 
-        if current.next == None:
-            rVal = current.val
-            self.head = None
-
-        else:
-            while current.next.next != None:
-                current = current.next
-
-            rVal = current.val
-            current.next = None
-            self.tail = current
+        current.next = current.next.next
+        self.tail = current
 
         self.size -= 1
 
         return rVal
 
-    def removeAnywhere(self, index):
-        if not (0 <= index < self.size) or self.isEmpty():
-            raise Exception("Index out of range or list is empty")
+    def removeAnywhere(self, index: int) -> None:
+        if self.isEmpty():
+            raise Exception("List is empty")
+
+        if not (0 <= index < self.size):
+            raise Exception("Index out of range")
 
         if index == 0:
             return self.removeFirst()
@@ -109,29 +112,21 @@ class LinkedList:
             current = self.head
             for _ in range(index - 1):
                 current = current.next
+
             rVal = current.next.val
             current.next = current.next.next
 
-        self.size -= 1
-        return rVal
+            self.size -= 1
 
-    def clear(self):
+            return rVal
+    
+    def clear(self) -> None:
         self.head = None
         self.tail = None
         self.size = 0
 
-    def get(self, index):
-        if not (0 <= index < self.size):
-            raise Exception("Index out of range")
-
-        current = self.head
-        for _ in range(index):
-            current = current.next
-
-        return current.val
-
     def __str__(self) -> str:
-        if self.size == 0:
+        if self.isEmpty():
             return "Empty List"
 
         display = ""
@@ -142,22 +137,18 @@ class LinkedList:
                                            if current.next != None else "")
             current = current.next
 
-        return display
+        return display + (f"{self.head.val}" if self.size > 1 else "")
 
 
-if __name__ == "__main__":
-    newList = LinkedList()
+if __name__ == '__main__':
+    cList = CircularLinkedList()
 
-    newList.addFirst("first")
+    cList.addFirst("First")
+    cList.addLast("Last")
+    cList.addAnywhere("fourth", 1)
+    cList.addAnywhere("third", 1)
+    cList.addAnywhere("second", 1)
 
-    print(newList)
+    cList.clear()
 
-    newList.addLast("last")
-
-    print(newList)
-
-    newList.addAnywhere("fourth", 1)
-    newList.addAnywhere("third", 1)
-    newList.addAnywhere("second", 0)
-
-    print(newList)
+    print(cList)
