@@ -40,15 +40,20 @@ class LinkedList:
         self.size += 1
 
     def addAnywhere(self, val, index: int) -> None:
-        if self.isEmpty():
+        if self.isEmpty() and index == 0:
             self.addFirst(val)
             return
 
-        if not (0 <= index < self.size):
+        if self.isEmpty() and index != 0:
+            raise Exception("List is empty")
+
+        if not (-1 <= index < self.size):
             raise Exception("Index out of range")
 
         if index == 0:
             self.addFirst(val)
+        elif index == -1:
+            self.addLast(val)
         else:
             current = self.head
             newNode = Node(val)
