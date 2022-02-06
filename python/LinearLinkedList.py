@@ -1,3 +1,5 @@
+from typing import Any
+
 class Node:
     def __init__(self, val, next=None) -> None:
         self.val = val
@@ -9,6 +11,7 @@ class LinkedList:
         self.head = None
         self.tail = None
         self.size = 0
+        self.__curr = 0
 
     def __len__(self) -> int:
         return self.size
@@ -134,6 +137,19 @@ class LinkedList:
             current = current.next
 
         return current.val
+
+    def __iter__(self):
+        self.__curr = 0
+        return self
+
+    def __next__(self) -> Any:
+        if self.__curr == self.size:
+            raise StopIteration()
+
+        rVal = self.get(self.__curr)
+        self.__curr += 1
+
+        return rVal
 
     def __str__(self) -> str:
         if self.size == 0:

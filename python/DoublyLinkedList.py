@@ -1,6 +1,5 @@
 from typing import Any
 
-
 class Node:
     def __init__(self, val, next=None, previous=None) -> None:
         self.val = val
@@ -127,6 +126,18 @@ class DoublyLinkedList:
         self.head = None
         self.tail = None
         self.size = 0
+
+    def __iter__(self):
+        return self
+
+    def __next__(self) -> Any:
+        if self.__curr == self.tail:
+            raise StopIteration()
+
+        rVal = self.__curr.val
+        self.__curr = self.__curr.next
+
+        return rVal
 
     def __str__(self) -> str:
         if self.size == 0:
